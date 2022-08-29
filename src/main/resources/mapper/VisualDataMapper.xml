@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.VisualDataMapper">
+    <!-- 查询用户人数 -->
+    <select id="findUserNum" resultType="long">
+        select COUNT(*) as count from tbluser
+    </select>
+
+    <!-- 查询骑手人数 -->
+    <select id="findRiderNum" resultType="long">
+        select count(*) as count from tblrider
+    </select>
+
+    <!-- 查询商家数量 -->
+    <select id="findShopNum" resultType="long">
+        select COUNT(*) as count from tblshop
+    </select>
+
+    <!-- 查询每种商品类型的商品数量（已删除商品的不查询） -->
+    <select id="findType" resultType="long">
+        select count(*) as num from tblgoods where goodsstate !=59 and typeid = #{typeid}
+    </select>
+
+    <!-- 查询每个月的用户数量 -->
+    <select id="findUser" resultType="long">
+        select count(*) as count from tbluser where time BETWEEN #{starttime} and #{endtime}
+    </select>
+
+    <!-- 查询不同地区的商家数量 -->
+    <select id="findShop" resultType="long">
+        select COUNT(*) as count from tblshop where 1=1
+        <if test="shopaddress != null and shopaddress != ''">
+            and shopaddress like concat (#{shopaddress},'%')
+        </if>
+    </select>
+
+    <!-- 查询每个月的完成单数量 -->
+    <select id="findFinish" resultType="long">
+        select COUNT(*) as count from tblorder where orderstate = 32
+        and ordertime BETWEEN #{starttime} and #{endtime}
+    </select>
+
+    <!-- 查询每个月的取消单和退单数量 -->
+    <select id="findCancel" resultType="long">
+        select COUNT(*) as count from tblorder where orderstate in (35,77)
+        and ordertime BETWEEN #{starttime} and #{endtime}
+    </select>
+
+</mapper>
